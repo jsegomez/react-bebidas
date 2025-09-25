@@ -4,8 +4,7 @@ import DrinkCard from "../components/DrinkCard";
 
 export default function IndexPage() {
   const { drinks } = useAppStore();
-  const hasDrinks:boolean = useMemo( ()=> drinks.length > 0, [drinks])
-  console.log(hasDrinks)
+  const hasDrinks:boolean = useMemo( ()=> drinks.length > 0, [drinks])  
 
   return (
     <div className="w-2/3 m-auto">

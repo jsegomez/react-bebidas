@@ -1,5 +1,5 @@
 import axios from "axios";
-import { CategoriesAPIResponseSchema, SearchRecipeSchema, DrinksAPIResponseSchema } from "../schemas/recipes-schema";
+import { CategoriesAPIResponseSchema, SearchRecipeSchema, DrinksAPIResponseSchema, RecipeResponseSchema } from "../schemas/recipes-schema";
 import type { Categories, DrinkResponse, SearchRecipe } from "../types";
 
 export async function getCategories():Promise<Categories> {
@@ -34,4 +34,18 @@ export async function getRecipes(filter: SearchRecipe):Promise<DrinkResponse[]> 
     }
 }
 
-//www.thecocktaildb.com/api/json/v1/1/lookup.php?i=11007
+export async function getRecipeDetails(idRecipe: string){
+    const url = `https://www.thecocktaildb.com/api/json/v1/1/lookup.php?i=${idRecipe}`
+
+    try {
+        const { data } = await axios.get(url);        
+        const isValidResponse = RecipeResponseSchema.safeParse(data);
+        if(!isValidResponse.success) throw new Error('Invalid response from API');
+
+        return isValidResponse.data.drinks;
+    } catch (error) {
+        console.log(error)
+        throw error
+    }
+}
+
