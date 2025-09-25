@@ -8,13 +8,13 @@ export type  RecipesSliceType = {
     searchRecipes: (recipe: SearchRecipe) => Promise<void>,
     drinks: DrinkResponse[],
     selectRecipe: (idRecipe: string) => Promise<void>;
-    recipeDetails: RecipeDetails[]
+    recipeDetails: RecipeDetails | null;
 }
 
 export const createRecipesSlice: StateCreator<RecipesSliceType> = (set) => ({
     categories: { drinks: [] },
     drinks: [],
-    recipeDetails: [],
+    recipeDetails: null,
     fetchCategories: async ():Promise<void> => {
         const categories = await getCategories();
         set({ categories });
@@ -24,7 +24,8 @@ export const createRecipesSlice: StateCreator<RecipesSliceType> = (set) => ({
         set({ drinks })
     },    
     selectRecipe: async(idRecipe: string):Promise<void> =>{
+        set({ recipeDetails: null });
         const recipeDetails = await getRecipeDetails(idRecipe);
-        set({ recipeDetails });
+        set({ recipeDetails: recipeDetails[0] });
     }
 });
