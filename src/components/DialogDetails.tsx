@@ -7,8 +7,25 @@ import Loading from './Loading/Loading';
 export default function DialogDetails() {
     const { recipeDetails } = useAppStore();
 
-    return (
+    const renderIngredients = () => {        
+        if(!recipeDetails) return null;
+        const { strIngredient1, strIngredient2, strIngredient3, strIngredient4, strIngredient5, strIngredient6 } = recipeDetails;
+        const { strMeasure1, strMeasure2, strMeasure3, strMeasure4, strMeasure5, strMeasure6 } = recipeDetails;
+        
+        const ingredients = [strIngredient1, strIngredient2, strIngredient3, strIngredient4, strIngredient5, strIngredient6];
+        const measures = [strMeasure1, strMeasure2, strMeasure3, strMeasure4, strMeasure5, strMeasure6];
 
+        return ingredients.map((ingredient, index) => {
+            if(!ingredient) return null;
+            return (
+                <li key={index} className='text-lg font-normal'>
+                    {ingredient} { measures[index] ? `- ${measures[index]}` : ''}
+                </li>
+            )
+        });
+    };
+
+    return (
         <>
             <TransitionChild
                 as={Fragment}
@@ -51,6 +68,10 @@ export default function DialogDetails() {
                                         <DialogTitle as="h3" className="text-gray-900 text-2xl font-extrabold my-5">
                                             Ingredientes y Cantidades
                                         </DialogTitle>
+
+                                        <ul className="list-disc list-inside">
+                                            { renderIngredients() }
+                                        </ul>
 
                                         <DialogTitle as="h3" className="text-gray-900 text-2xl font-extrabold my-5">
                                             Instrucciones
