@@ -1,15 +1,23 @@
 import { Outlet } from "react-router-dom";
+// import { useAppStore } from "../stores/useAppStore";
+
 import Header from "../components/Header";
+import Notification from "../components/Notification";
+
 
 export default function Layout() {
+  // const { notification } = useAppStore();
+
   return (
     <>
         <div >
             <Header />
 
-            <div className="mt-10">
+            <main className="mt-10">
               <Outlet />
-            </div>
+            </main>
+
+            <Notification />
         </div>
     </>
   )
