@@ -1,11 +1,18 @@
 import { DialogPanel, DialogTitle, TransitionChild } from '@headlessui/react'
-import { Fragment } from 'react'
+import { Fragment, type Dispatch, type SetStateAction } from 'react'
 import { useAppStore } from '../stores/useAppStore';
 import Loading from './Loading/Loading';
 
+type DialogDetailsProps = {
+    setIsOpen: Dispatch<SetStateAction<boolean>>
+}
 
-export default function DialogDetails() {
+
+export default function DialogDetails({ setIsOpen }: DialogDetailsProps) {
     const { recipeDetails } = useAppStore();
+    const { addOrRemoveFavorite, favorites } = useAppStore();
+
+    const isFavorite = favorites.some(favorite => favorite.idDrink === recipeDetails?.idDrink);
 
     const renderIngredients = () => {        
         if(!recipeDetails) return null;
@@ -62,7 +69,7 @@ export default function DialogDetails() {
                                         <img
                                             src={recipeDetails.strDrinkThumb}
                                             alt={recipeDetails.strDrink}
-                                            className='mx-auto w-96'
+                                            className='mx-auto w-80'
                                         />
 
                                         <DialogTitle as="h3" className="text-gray-900 text-2xl font-extrabold my-5">
@@ -78,6 +85,20 @@ export default function DialogDetails() {
                                         </DialogTitle>
 
                                         <p className='text-lg'>{recipeDetails.strInstructions}</p>
+
+                                        <div className='mt-5 flex justify-between gap-4'>
+                                            <button
+                                                type='button'
+                                                className='w-full rounded bg-orange-600 p-3 font-bold text-white shadow-lg hover:bg-orange-700 cursor-pointer'
+                                                onClick={() => addOrRemoveFavorite(recipeDetails, isFavorite) }
+                                            > { isFavorite ? 'Remover de favoritos' : 'Agregar a favoritos' }</button>
+
+                                            <button
+                                                type='button'
+                                                className='w-full rounded bg-gray-600 p-3 font-bold text-white shadow-lg hover:bg-grey-700 cursor-pointer'
+                                                onClick={() => setIsOpen(false)}
+                                            >Cerrar</button>
+                                        </div>
                                     </>
                                 )
                             }

@@ -38,7 +38,9 @@ export default function DrinkCard({ drink } : DrinkCardProps) {
 
       <Transition appear show={isOpen} as={Fragment}>
         <Dialog open={isOpen} onClose={() => setIsOpen(false)} className="relative z-50">
-          <DialogDetails />
+          <DialogDetails
+            setIsOpen={setIsOpen}
+          />
         </Dialog>
       </Transition>
     </div>
