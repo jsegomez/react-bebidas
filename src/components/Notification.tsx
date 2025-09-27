@@ -1,12 +1,10 @@
-import { Fragment } from 'react'
-//import { CheckCircleIcon, XCircleIcon } from '@heroicons/react/24/outline'
-import { XMarkIcon } from '@heroicons/react/20/solid'
-import { Transition } from '@headlessui/react'
-import { useAppStore } from '../stores/useAppStore'
+import { Fragment } from 'react';
+import { XCircleIcon, XMarkIcon } from '@heroicons/react/20/solid';
+import { Transition } from '@headlessui/react';
+import { useAppStore } from '../stores/useAppStore';
 
 export default function Notification() {
-  const { notification } = useAppStore();
-
+  const { notification, setNotification } = useAppStore();
 
   return (
     <div
@@ -29,7 +27,7 @@ export default function Notification() {
               <div className="flex items-start">
                 <div className="flex-shrink-0">
                   {notification?.error ? (
-                    <XMarkIcon className="h-6 w-6 text-red-400" aria-hidden="true" />
+                    <XCircleIcon className="h-6 w-6 text-red-400" aria-hidden="true" />
                   ) : (
                     <XMarkIcon className="h-6 w-6 text-green-400" aria-hidden="true" />
                   )}
@@ -44,7 +42,7 @@ export default function Notification() {
                   <button
                     type="button"
                     className="inline-flex rounded-md bg-white text-gray-400 hover:text-gray-500 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
-                    onClick={() => { }}
+                    onClick={() => { setNotification(null); }}
                   >
                     <span className="sr-only">Cerrar</span>
                     <XMarkIcon className="h-5 w-5" aria-hidden="true" />

@@ -2,34 +2,46 @@ import { DialogPanel, DialogTitle, TransitionChild } from '@headlessui/react'
 import { Fragment, type Dispatch, type SetStateAction } from 'react'
 import { useAppStore } from '../stores/useAppStore';
 import Loading from './Loading/Loading';
+import type { RecipeDetails } from '../types';
 
 type DialogDetailsProps = {
     setIsOpen: Dispatch<SetStateAction<boolean>>
 }
 
-
 export default function DialogDetails({ setIsOpen }: DialogDetailsProps) {
-    const { recipeDetails } = useAppStore();
+    const { recipeDetails, setNotification } = useAppStore();
     const { addOrRemoveFavorite, favorites } = useAppStore();
-
     const isFavorite = favorites.some(favorite => favorite.idDrink === recipeDetails?.idDrink);
 
-    const renderIngredients = () => {        
-        if(!recipeDetails) return null;
+    const renderIngredients = () => {
+        if (!recipeDetails) return null;
         const { strIngredient1, strIngredient2, strIngredient3, strIngredient4, strIngredient5, strIngredient6 } = recipeDetails;
         const { strMeasure1, strMeasure2, strMeasure3, strMeasure4, strMeasure5, strMeasure6 } = recipeDetails;
-        
+
         const ingredients = [strIngredient1, strIngredient2, strIngredient3, strIngredient4, strIngredient5, strIngredient6];
         const measures = [strMeasure1, strMeasure2, strMeasure3, strMeasure4, strMeasure5, strMeasure6];
 
         return ingredients.map((ingredient, index) => {
-            if(!ingredient) return null;
+            if (!ingredient) return null;
             return (
                 <li key={index} className='text-lg font-normal'>
-                    {ingredient} { measures[index] ? `- ${measures[index]}` : ''}
+                    {ingredient} {measures[index] ? `- ${measures[index]}` : ''}
                 </li>
             )
         });
+    };
+
+    const handleFavorites = (recipe: RecipeDetails) => {
+        addOrRemoveFavorite(recipe, isFavorite);
+        setIsOpen(false);
+
+        setTimeout(() => {
+            if (isFavorite) {
+                setNotification({ message: 'Removido de favoritos', error: false, show: true, duration: 3000 });
+            } else {
+                setNotification({ message: 'Adicionado a favoritos', error: false, show: true, duration: 3000 });
+            }
+        }, 300);
     };
 
     return (
@@ -77,7 +89,7 @@ export default function DialogDetails({ setIsOpen }: DialogDetailsProps) {
                                         </DialogTitle>
 
                                         <ul className="list-disc list-inside">
-                                            { renderIngredients() }
+                                            {renderIngredients()}
                                         </ul>
 
                                         <DialogTitle as="h3" className="text-gray-900 text-2xl font-extrabold my-5">
@@ -90,8 +102,8 @@ export default function DialogDetails({ setIsOpen }: DialogDetailsProps) {
                                             <button
                                                 type='button'
                                                 className='w-full rounded bg-orange-600 p-3 font-bold text-white shadow-lg hover:bg-orange-700 cursor-pointer'
-                                                onClick={() => addOrRemoveFavorite(recipeDetails, isFavorite) }
-                                            > { isFavorite ? 'Remover de favoritos' : 'Agregar a favoritos' }</button>
+                                                onClick={() => handleFavorites(recipeDetails)}
+                                            > {isFavorite ? 'Remover de favoritos' : 'Agregar a favoritos'}</button>
 
                                             <button
                                                 type='button'

@@ -9,7 +9,7 @@ export default function Header() {
     ingredient: '',
     category: ''
   });
-  const { fetchCategories, categories, searchRecipes } =useAppStore();
+  const { fetchCategories, categories, searchRecipes, setNotification } =useAppStore();
 
   const isHome = useMemo(() => pathname === '/',[pathname]);
 
@@ -24,7 +24,13 @@ export default function Header() {
     event.preventDefault();
 
     if(!searchFilter || Object.values(searchFilter).includes('')) {
-      return console.log('todos los cambpos son obligatorios');
+      setNotification({
+        message: 'Todos los campos son obligatorios',
+        error: true,
+        show: true,
+      });
+
+      return;
     }
 
     searchRecipes(searchFilter);
