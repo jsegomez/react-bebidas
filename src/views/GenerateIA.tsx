@@ -1,22 +1,45 @@
+import type { FormEvent } from "react";
+import { useAppStore } from "../stores/useAppStore";
+
 export default function GenerateAI() {
+  const { setNotification, generateRecipeIA } = useAppStore();
+
+  const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+    const formData = new FormData(event.currentTarget);
+    const prompt = formData.get('prompt')?.toString().trim();
+
+    if (!prompt) return openNotification();
+    generateRecipeIA(prompt);
+  }
+
+  const openNotification = () => {
+    setNotification({
+      error: true,
+      message: 'El prompt es requerido',
+      show: true,
+      duration: 3000
+    });
+  }
+
   return (
     <>
       <h1 className="text-6xl font-extrabold">Generar Receta con IA</h1>
 
       <div className="max-w-4xl mx-auto">
-        <form  
-          onSubmit={() => {}}
+        <form
+          onSubmit={handleSubmit}
           className='flex flex-col space-y-3 py-10'
         >
           <div className="relative">
-            <input 
-              name="prompt" 
-              id="prompt" 
-              className="border bg-white p-4 rounded-lg w-full border-slate-800" 
+            <input
+              name="prompt"
+              id="prompt"
+              className="border bg-white p-4 rounded-lg w-full border-slate-800"
               placeholder="Genera una receta con ingredientes. Ej. Bebida con Tequila y Fresa"
             />
-            <button 
-              type="submit" 
+            <button
+              type="submit"
               aria-label="Enviar"
               className={`cursor-pointer absolute top-1/2 right-5 transform -translate-x-1/2 -translate-y-1/2`}
             >
@@ -30,10 +53,9 @@ export default function GenerateAI() {
         </form>
 
         <div className="py-10 whitespace-pre-wrap">
-
         </div>
       </div>
 
-    </> 
+    </>
   )
 }

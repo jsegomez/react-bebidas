@@ -1,11 +1,11 @@
-import { BrowserRouter, Route, Routes } from 'react-router-dom'
+import { BrowserRouter, Route, Routes } from 'react-router-dom';
+import { lazy, Suspense } from 'react';
 
 // Components
+import GenerateAI from './views/GenerateIA'
 import IndexPage from './views/IndexPage'
 import Layout from './layouts/Layout'
-import { lazy, Suspense } from 'react'
 import Loading from './components/Loading/Loading'
-import GenerateAI from './views/GenerateIA'
 
 const FavoritePageLazy = lazy(() => import('./views/FavoritePage'))
 
