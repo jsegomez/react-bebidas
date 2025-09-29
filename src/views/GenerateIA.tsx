@@ -1,8 +1,11 @@
-import type { FormEvent } from "react";
+import { useState, type FormEvent } from "react";
 import { useAppStore } from "../stores/useAppStore";
 
 export default function GenerateAI() {
+  const recipeDetails = useAppStore((state) => state.recipe);
+  const isGenerating = useAppStore((state) => state.isGenerating);
   const { setNotification, generateRecipeIA } = useAppStore();
+  const [lastPrompt, setLastPrompt] = useState('');
 
   const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
@@ -10,7 +13,9 @@ export default function GenerateAI() {
     const prompt = formData.get('prompt')?.toString().trim();
 
     if (!prompt) return openNotification();
+    setLastPrompt(prompt);
     generateRecipeIA(prompt);
+    event.currentTarget.reset();
   }
 
   const openNotification = () => {
@@ -28,7 +33,7 @@ export default function GenerateAI() {
 
       <div className="max-w-4xl mx-auto">
         <form
-          onSubmit={handleSubmit}
+          onSubmit={ handleSubmit }
           className='flex flex-col space-y-3 py-10'
         >
           <div className="relative">
@@ -37,11 +42,14 @@ export default function GenerateAI() {
               id="prompt"
               className="border bg-white p-4 rounded-lg w-full border-slate-800"
               placeholder="Genera una receta con ingredientes. Ej. Bebida con Tequila y Fresa"
+              autoComplete="off"
+              disabled={ isGenerating }
             />
             <button
               type="submit"
+              disabled={ isGenerating }
               aria-label="Enviar"
-              className={`cursor-pointer absolute top-1/2 right-5 transform -translate-x-1/2 -translate-y-1/2`}
+              className={`cursor-pointer absolute top-1/2 right-5 transform -translate-x-1/2 -translate-y-1/2 ${ isGenerating ? 'text-gray-400' : 'text-gray-800 hover:text-black' }`}
             >
               <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="1.5"
                 stroke="currentColor" className="w-10 h-10">
@@ -52,7 +60,12 @@ export default function GenerateAI() {
           </div>
         </form>
 
+        <div className="whitespace-pre-wrap">
+          <p>{ lastPrompt }:</p> 
+        </div>
+
         <div className="py-10 whitespace-pre-wrap">
+          <p>{ recipeDetails }</p> 
         </div>
       </div>
 
